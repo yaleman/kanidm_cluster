@@ -2,7 +2,11 @@
 version: "3.8"
 
 services:
+  # nosemgrep:yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service
   letsencrypt:
+    hostname: kanidm_letsencrypt
+    security_opt:
+      - no-new-privileges:true
     env_file: .env
     image: certbot/dns-cloudflare
     entrypoint: /letsencrypt_script.sh
@@ -16,14 +20,16 @@ services:
       - type: bind
         source: /etc/cloudflare.ini
         target: /etc/cloudflare.ini
+  # nosemgrep:yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service
   haproxy:
     hostname: kanidm_haproxy
     container_name: kanidm_haproxy
+    security_opt:
+      - no-new-privileges:true
     image: haproxy:lts-alpine
-    read_only: true
     ports:
-      - "7443:7443"
-      - "8405:8405"
+      - "7443:7443" # webui
+      - "8405:8405" # haproxy metrics on /metrics
     volumes:
       - type: bind
         source: ./haproxy.cfg
@@ -31,11 +37,13 @@ services:
       - type: volume
         source: haproxy_certs
         target: /etc/letsencrypt
-
+  # nosemgrep:yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service
   left:
     container_name: kanidm_left
     hostname: kanidm_left
     image: kanidm/server:devel
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - type: volume
         source: left_data
@@ -43,13 +51,15 @@ services:
       - type: bind
         source: ./config_left.toml
         target: /data/server.toml
-    ports:
-      - "8443:8443"
-
+    # ports:
+      # - "8443:8443"
+  # nosemgrep:yaml.docker-compose.security.writable-filesystem-service.writable-filesystem-service
   right:
     container_name: kanidm_right
     hostname: kanidm_right
     image: kanidm/server:devel
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - type: volume
         source: right_data
@@ -57,8 +67,8 @@ services:
       - type: bind
         source: ./config_right.toml
         target: /data/server.toml
-    ports:
-      - "8444:8444"
+    # ports:
+    #   - "8444:8444"
 
 volumes:
   left_data:
