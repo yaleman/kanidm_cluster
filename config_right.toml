@@ -1,0 +1,28 @@
+
+i_acknowledge_that_replication_is_in_development = true
+
+bindaddress = "[::]:8444"
+trust_x_forward_for = true
+db_path = "/var/lib/kanidm/kanidm.db"
+
+tls_chain = "/var/lib/kanidm/fullchain.pem"
+tls_key = "/var/lib/kanidm/privkey.pem"
+log_level = "debug"
+
+domain = "test-kanidm.yaleman.org"
+
+origin = "https://right.test-kanidm.yaleman.org"
+
+# [online_backup]
+# schedule = "00 22 * * *"
+# versions = 1
+
+
+[replication]
+origin = "repl://kanidm_right:9444"
+bindaddress="0.0.0.0:9444"
+
+[replication."repl://kanidm_left:9444"]
+automatic_refresh=true
+type = "mutual-pull"
+partner_cert = "MIIB_TCCAaOgAwIBAgIBATAKBggqhkjOPQQDAjBMMRswGQYDVQQKDBJLYW5pZG0gUmVwbGljYXRpb24xLTArBgNVBAMMJDQyOWQxNWFlLThlNDktNDQwYy05MjQ4LTUwOTIwZDdmMDM5MTAeFw0yMzEwMDYwMTQwNTJaFw0yNDA0MDMwMTQwNTJaMEwxGzAZBgNVBAoMEkthbmlkbSBSZXBsaWNhdGlvbjEtMCsGA1UEAwwkNDI5ZDE1YWUtOGU0OS00NDBjLTkyNDgtNTA5MjBkN2YwMzkxMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE-Iu28ik_ojBPF4-VeLY3Gfujma9apKbYpmfya0U1Xqm9T0BCOWGqf-FfEyRtPq2Bx3h95-oKqeQnReQZikYjUqN2MHQwDAYDVR0TAQH_BAIwADAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB0GA1UdDgQWBBTaOaPuXmtLDTJVv--VYBiQr9gHCTAWBgNVHREEDzANggtrYW5pZG1fbGVmdDAKBggqhkjOPQQDAgNIADBFAiEArb4X8ex4sHBqB20dbamNSoxS1raAvyinlC6ioYc8nosCIBkT-9ifMIJmAkY131ybyYVMZqTzF0_Jv_b3d7s-k-cJ"
