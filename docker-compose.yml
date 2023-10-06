@@ -1,0 +1,66 @@
+---
+version: "3.8"
+
+services:
+  letsencrypt:
+    env_file: .env
+    image: certbot/dns-cloudflare
+    entrypoint: /letsencrypt_script.sh
+    volumes:
+      - type: volume
+        source: haproxy_certs
+        target: /etc/letsencrypt
+      - type: bind
+        source: ./letsencrypt_script.sh
+        target: /letsencrypt_script.sh
+      - type: bind
+        source: /etc/cloudflare.ini
+        target: /etc/cloudflare.ini
+  haproxy:
+    hostname: kanidm_haproxy
+    container_name: kanidm_haproxy
+    image: haproxy:lts-alpine
+    read_only: true
+    ports:
+      - "7443:7443"
+      - "8405:8405"
+    volumes:
+      - type: bind
+        source: ./haproxy.cfg
+        target: /usr/local/etc/haproxy/haproxy.cfg
+      - type: volume
+        source: haproxy_certs
+        target: /etc/letsencrypt
+
+  left:
+    container_name: kanidm_left
+    hostname: kanidm_left
+    image: kanidm/server:devel
+    volumes:
+      - type: volume
+        source: left_data
+        target: /var/lib/kanidm
+      - type: bind
+        source: ./config_left.toml
+        target: /data/server.toml
+    ports:
+      - "8443:8443"
+
+  right:
+    container_name: kanidm_right
+    hostname: kanidm_right
+    image: kanidm/server:devel
+    volumes:
+      - type: volume
+        source: right_data
+        target: /var/lib/kanidm
+      - type: bind
+        source: ./config_right.toml
+        target: /data/server.toml
+    ports:
+      - "8444:8444"
+
+volumes:
+  left_data:
+  right_data:
+  haproxy_certs:
