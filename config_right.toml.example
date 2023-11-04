@@ -21,6 +21,7 @@ origin = "https://right.test-kanidm.yaleman.org"
 [replication]
 origin = "repl://kanidm_right:9444"
 bindaddress="0.0.0.0:9444"
+task_poll_interval = 180
 
 [replication."repl://kanidm_left:9444"]
 automatic_refresh=true

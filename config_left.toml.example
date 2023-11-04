@@ -22,7 +22,7 @@ origin = "https://left.test-kanidm.yaleman.org"
 origin = "repl://kanidm_left:9444"
 # The bind address of the replication port.
 bindaddress = "0.0.0.0:9444"
-
+task_poll_interval = 180
 
 [replication."repl://kanidm_right:9444"]
 automatic_refresh = false
