@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+#shellcheck disable=SC2068
+docker run --rm -it \
+    --mount "type=bind,source=./kanidm.toml,target=/etc/kanidm/config" \
+    kanidm/tools:devel \
+    $@
